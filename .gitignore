@@ -1,0 +1,8 @@
+/sys/accelerometer*
+/sys/config.g.bak
+/sys/*.json
+/sys/*.csv
+sys/resurrect.g
+/www*
+/gcodes*
+/firmware*
