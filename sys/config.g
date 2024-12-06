@@ -57,7 +57,7 @@ M574 C1 S1 P"io3.in"                                         ; configure switch-
 M574 Z1 S2
 
 ; Z-Probe
-M558 P5 C"^io2.in" H5:2 F300:120 T6000 A3 S0.01              ; set Z probe type to switch and the dive height + speeds
+M558 P5 C"^io2.in" H5:2 F300:120 T12000 A3 S0.01             ; set Z probe type to switch and the dive height + speeds
 G31 P200 X0 Y0 Z0                                            ; set Z probe trigger value, offset and trigger height
 M557 X-140:140 Y-80:80 S40                                   ; define mesh grid
 
