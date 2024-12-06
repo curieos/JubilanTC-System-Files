@@ -7,8 +7,6 @@ M98 R0
 var dock_x = global.dock_positions[param.D][0] + param.X
 var dock_y = global.dock_positions[param.D][1] + param.Y
 
-echo var.dock_x, var.dock_y
-
 ; global.dock_check_clearance
 ; global.dock_clearance
 
@@ -30,7 +28,9 @@ if sensors.gpIn[0].value == 0
 M98 P{directories.system^"/System Macros/Tool Change/tool_lock.g"}
 
 ; based on tool offsets, lower bed
-
+G91
+G1 Z{-tools[state.nextTool].offsets[2]}
+G90
 
 ; back off dock
 G53 G1 Y{var.dock_y - global.dock_check_clearance} F{20*60}
@@ -43,6 +43,7 @@ if sensors.gpIn[0].value == 0
 ; check docking switch when that's a thing
 
 ; fully backoff with tool
-G53 G1 Y{var.dock_y - global.dock_clearance} F{50*60}
+G53 G1 Y{var.dock_y - global.dock_clearance - tools[state.nextTool].offsets[1]} F{50*60}
 
 ; check pickup switch again?
+
