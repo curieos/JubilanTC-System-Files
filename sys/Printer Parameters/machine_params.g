@@ -19,7 +19,7 @@ set global.safe_speed = 75 * 60
 set global.tool_heater_timeout = 5 * 60
 set	global.bed_heater_timeout = 600 * 60
 
-set global.dock_positions = {{-157.0, 140.5}, {-67.0, 140.5}, {0,0}, {0,0}}
+set global.dock_positions = {{-157.0, 140.5}, {-67.0, 140.5}, {68.0, 140.5}, {158.0, 140.5}}
 
 set global.dock_clearance = 50
 set global.dock_check_clearance = 10
