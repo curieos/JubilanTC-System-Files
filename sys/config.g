@@ -23,16 +23,26 @@ M569 P0.0 S0                                                 ; physical drive 0.
 M569 P0.1 S0                                                 ; physical drive 0.1 goes backwards
 M569 P0.2 S1                                                 ; physical drive 0.2 goes forwards
 M569 P0.3 S0 D3                                              ; physical drive 0.3 goes forwards
-M569 P121.0 S1                                               ; physical drive 121.0 goes forwards
-M584 X0.0 Y0.1 Z0.2 C0.3 E121.0                              ; set drive mapping
-M350 X16 Y16 Z16 E16 I1                                      ; configure microstepping with interpolation
+M584 X0.0 Y0.1 Z0.2 C0.3                                     ; set drive mapping
+M350 X16 Y16 Z16 I1                                          ; configure microstepping with interpolation
 M350 C4 I1                                                   ; configure microstepping with interpolation
-M92 X100.00 Y100.00 Z1600.00 C{13.76/1.8} E834.00            ; set steps per mm
-M566 X300.00 Y300.00 Z60.00 C800 E300.00                     ; set maximum instantaneous speed changes (mm/min)
-M203 X30000.00 Y30000.00 Z180.00 C9000 E1200.00              ; set maximum speeds (mm/min)
-M201 X3000.00 Y3000.00 Z400.00 C800 E250.00                  ; set accelerations (mm/s^2)
-M906 X1200 Y1200 Z1000 E800 I60                              ; set motor currents (mA) and motor idle factor in per cent
+M92 X100.00 Y100.00 Z800.00 C{13.76/1.8}                     ; set steps per mm
+M566 X300.00 Y300.00 Z60.00 C800                             ; set maximum instantaneous speed changes (mm/min)
+M203 X30000.00 Y30000.00 Z900.00 C9000                       ; set maximum speeds (mm/min)
+M201 X4000.00 Y4000.00 Z400.00 C800                          ; set accelerations (mm/s^2)
+M906 X1200 Y1200 Z1000 I80                                   ; set motor currents (mA) and motor idle factor in per cent
 M906 C670 I60                                                ; set motor currents (mA) and motor idle factor in per cent
+
+; Extruders
+M569 P20.0 S1                                                ; physical drive 20.0 goes forwards
+M569 P21.0 S1                                                ; physical drive 21.0 goes forwards
+M584 E20.0:21.0                                              ; set drive mapping
+M350 E16 I1                                                  ; configure microstepping with interpolation
+M92 E398.00                                                  ; set steps per mm
+M566 E1200                                                   ; set maximum instantaneous speed changes (mm/min)
+M203 E6000                                                   ; set maximum speeds (mm/min)
+M201 E12000                                                  ; set accelerations (mm/s^2)
+M906 E800 I60                                                ; set motor currents (mA) and motor idle factor in per cent
 M84 S120                                                     ; Set idle timeout
 
 ; Axis Limits
@@ -58,24 +68,41 @@ M307 H0 B0 S1.00                                             ; disable bang-bang
 M140 H0                                                      ; map heated bed to heater 0
 M143 H0 S120                                                 ; set temperature limit for heater 0 to 120C
 
-M308 S1 P"121.temp0" Y"pt1000" A"0.4 Hemera V6"              ; configure sensor 1 as thermistor on pin 121.temp0
-M950 H1 C"121.out0" T1                                       ; create nozzle heater output on 121.out0 and map it to sensor 1
+M308 S1 P"20.temp0" Y"pt1000" A"0.4 Hemera V6"               ; configure sensor 1 as thermistor on pin 20.temp0
+M950 H1 C"20.out0" T1                                        ; create nozzle heater output on 20.out0 and map it to sensor 1
 M307 H1 B0 S1.00                                             ; disable bang-bang mode for heater  and set PWM limit
 M143 H1 S350                                                 ; set temperature limit for heater 1
 
+M308 S2 P"21.temp0" Y"pt1000" A"0.4 Hemera V6"               ; configure sensor 1 as thermistor on pin 20.temp0
+M950 H2 C"21.out0" T2                                        ; create nozzle heater output on 20.out0 and map it to sensor 1
+M307 H2 B0 S1.00                                             ; disable bang-bang mode for heater  and set PWM limit
+M143 H2 S350                                                 ; set temperature limit for heater 1
+
 ; Fans
-M950 F0 C"121.out1" Q500                                     ; create fan 0 on pin 121.out1 and set its frequency
+M950 F0 C"20.out1" Q500                                      ; create fan 0 on pin 20.out1 and set its frequency
 M106 P0 S0 H-1                                               ; set fan 0 value. Thermostatic control is turned off
-M950 F1 C"121.out2" Q500                                     ; create fan 1 on pin 121.out2 and set its frequency
-M106 P1 S1 H1 T45                                            ; set fan 1 value. Thermostatic control is turned on
+M950 F1 C"20.out2" Q500                                      ; create fan 1 on pin 20.out2 and set its frequency
+M106 P1 S1 H1 T45 X0.7                                       ; set fan 1 value. Thermostatic control is turned on
+
+M950 F2 C"21.out1" Q500                                      ; create fan 0 on pin 20.out1 and set its frequency
+M106 P2 S0 H-1                                               ; set fan 0 value. Thermostatic control is turned off
+M950 F3 C"21.out2" Q500                                      ; create fan 1 on pin 20.out2 and set its frequency
+M106 P3 S1 H2 T45 X0.7                                       ; set fan 1 value. Thermostatic control is turned on
 
 ; Tools
 M563 P0 D0 H1 F0                                             ; define tool 0
 G10 P0 X0 Y0 Z0                                              ; set tool 0 axis offsets
 G10 P0 R0 S0                                                 ; set initial tool 0 active and standby temperatures to 0C
+M591 P1 C"20.io1.in" S1 D0
+
+M563 P1 D1 H2 F3                                             ; define tool 0
+G10 P1 X0 Y0 Z0                                              ; set tool 0 axis offsets
+G10 P1 R0 S0                                                 ; set initial tool 0 active and standby temperatures to 0C
 
 ; I/O Pins
 M950 J0 C"^io5.in"
+M950 J1 C"^20.io3.in"
+M950 J2 C"^21.io3.in"
 
 ; Custom settings are not defined
 
